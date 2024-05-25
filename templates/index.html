@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .selected {
+            background-color: yellow;
+        }
+    </style>
+    
+</head>
+<body style="background-color: rgb(250, 243, 144);">
+
+    <div style="text-align: center; color: green;"><h1>0</h1></div>
+    <p style="color: aqua; font-size: large; background-color: black; text-align: center;">
+        This quiz will last for 5 minutes
+    </p>
+    <button id="start-button" onclick="startQuiz()" style="font-size: larger; background-color: blue; align-self: center;">
+        Click to start quiz
+    </button>
+
+    <div id="quiz-container" style="display: none;">
+        <div id="question"></div>
+        <div id="options"></div>
+        <button id="next-button">Next</button>
+    </div>
+
+    <script>
+        let questions = JSON.parse('{{ questions | tojson | safe }}');
+
+        const quizDuration = 5 * 60; 
+        let timeRemaining = quizDuration;
+
+
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let selectedOption = null;
+        let intervalId = null;
+
+
+
+        function changeTimer() {
+                timeRemaining -= 1;
+
+        if (timeRemaining <= 0) {
+                clearInterval(intervalId);
+                showResults();
+                return;
+        }
+
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                
+                let formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
+                
+                document.querySelector('h1').textContent = minutes + " : " + formattedSeconds;
+            
+        }
+
+        function startQuiz() {
+            intervalId = setInterval(changeTimer, 1000);
+            displayQuestion();
+            document.getElementById('quiz-container').style.display = 'block';
+            document.getElementById('start-button').style.display = 'none';
+        }
+        
+
+        function displayQuestion() {
+            const questionObj = questions[currentQuestionIndex];
+            document.getElementById('question').textContent = questionObj.question;
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            questionObj.options.forEach(option => {
+            const button = document.createElement('button');
+            button.textContent = option;
+            button.onclick = function() { selectOption(button, option); };
+            optionsContainer.appendChild(button);
+          });
+        }
+
+        function selectOption(button, option) {
+          selectedOption = option;
+
+          
+          const buttons = document.querySelectorAll('#options button');
+          buttons.forEach(btn => btn.classList.remove('selected'));
+
+          
+          button.classList.add('selected');
+        }
+
+        function showResults() {
+          const quizContainer = document.getElementById('quiz-container');
+          quizContainer.innerHTML = '<h1>Your Results</h1>';
+          clearInterval(intervalId)
+          
+         
+          let score = 0;
+          questions.forEach((question, index) => {
+              if (userAnswers[index] === question.answer) {
+                  score++;
+              }
+          });
+          
+          const result = document.createElement('p');
+          result.textContent = `You got ${score} out of ${questions.length} correct.`;
+          quizContainer.appendChild(result);
+        }
+
+        document.getElementById('next-button').addEventListener('click', () => {
+          if (selectedOption !== null) {
+            userAnswers[currentQuestionIndex] = selectedOption;
+            currentQuestionIndex++;
+            selectedOption = null;
+            if (currentQuestionIndex < questions.length) {
+              displayQuestion();
+              
+            } else {
+              showResults();
+            }
+          }
+        });
+    </script>
+</body>
+</html>
