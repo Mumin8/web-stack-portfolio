@@ -3,21 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>
+      Quiz
+    </title>
     <style>
         .selected {
-            background-color: yellow;
+            background-color: rgb(134, 133, 230);
+            font-size: larger;
         }
     </style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     
 </head>
-<body style="background-color: rgb(250, 243, 144);">
+<body style="background-color: rgb(209, 230, 212);">
 
-    <div style="text-align: center; color: green;"><h1>0</h1></div>
-    <p style="color: aqua; font-size: large; background-color: black; text-align: center;">
+  <h3>previous result: {{ prev }}</h3>
+
+    <div style="text-align: center; color: rgb(30, 150, 6);">
+      <h1>
+        0
+      </h1>
+    </div>
+    <p style="color: rgb(10, 10, 10); font-size: large; background-color: white; text-align: center;">
         This quiz will last for 5 minutes
     </p>
-    <button id="start-button" onclick="startQuiz()" style="font-size: larger; background-color: blue; align-self: center;">
+    <button id="start-button" onclick="startQuiz()" 
+            style="font-size: larger; background-color: blue; align-self: center;">
         Click to start quiz
     </button>
 
@@ -96,6 +108,8 @@
           const quizContainer = document.getElementById('quiz-container');
           quizContainer.innerHTML = '<h1>Your Results</h1>';
           clearInterval(intervalId)
+
+          
           
          
           let score = 0;
@@ -104,10 +118,18 @@
                   score++;
               }
           });
+
+          $.ajax({
+            type: "POST",
+            url: "/save_result",
+            data: {key: `${score*100/questions.length}` },
+            success: function(response){
+              const result = document.createElement('p');
+              result.textContent = `Score: ${score*100/questions.length} %`;
+              quizContainer.appendChild(result);
+            }
+          })
           
-          const result = document.createElement('p');
-          result.textContent = `You got ${score} out of ${questions.length} correct.`;
-          quizContainer.appendChild(result);
         }
 
         document.getElementById('next-button').addEventListener('click', () => {
