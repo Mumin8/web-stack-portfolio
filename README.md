@@ -33,7 +33,7 @@ who wishes to scaffold it in their project
 # 2. The should encrypt the password to secure the user infor
 # 3. You You should validate the email before saving in your database
 
-# sine external libraries
+# some external libraries
 
 ## pip install Flask==3.0.3
 ## pip install Flask-Login==0.6.3
