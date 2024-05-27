@@ -1,3 +1,5 @@
+A real quiz application
+
 # tech stacks;
 # 
 ### python
