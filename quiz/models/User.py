@@ -3,10 +3,10 @@ from quiz import db, login_manager, app
 from flask_login import UserMixin
 
 
-
 @login_manager.user_loader
 def loader_user(user_id):
     return Student.query.get(user_id)
+
 
 class Student(db.Model, UserMixin):
     '''
@@ -21,20 +21,19 @@ class Student(db.Model, UserMixin):
 
     def __repr__(self):
         return f'<Student {self.username}>'
-    
 
 
 class Quiz(db.Model):
     '''
     The quiz model definition
     '''
-    
+
     id = db.Column(db.Integer, primary_key=True)
     result = db.Column(db.String(20), nullable=True, default='0')
+
     def update(self, result):
         self.result = result
         db.session.commit()
 
     def __repr__(self):
         return f'<Quiz {self.result}>'
-    
