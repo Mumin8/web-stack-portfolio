@@ -35,6 +35,6 @@ who wishes to scaffold it in their project
 
 # sine external libraries
 
-## Flask==3.0.3
-## Flask-Login==0.6.3
-## Flask-SQLAlchemy==3.1.1
+## pip install Flask==3.0.3
+## pip install Flask-Login==0.6.3
+## pip install Flask-SQLAlchemy==3.1.1
