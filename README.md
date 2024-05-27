@@ -33,3 +33,8 @@ who wishes to scaffold it in their project
 # 2. The should encrypt the password to secure the user infor
 # 3. You You should validate the email before saving in your database
 
+# sine external libraries
+
+## Flask==3.0.3
+## Flask-Login==0.6.3
+## Flask-SQLAlchemy==3.1.1
